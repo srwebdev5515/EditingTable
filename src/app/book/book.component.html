@@ -1,0 +1,47 @@
+<table class="table table-borderedtable-hover table-striped table-sortable" [mfData]="books" #mf="mfDataTable"  [mfRowsOnPage]="5">
+  <thead>
+    <tr>
+      <th><mfDefaultSorter by="distributorname">Name</mfDefaultSorter></th>
+      <th><mfDefaultSorter by="name">Authors</mfDefaultSorter></th>
+      <th><mfDefaultSorter by="owner">Number of Pages</mfDefaultSorter></th>
+      <th><mfDefaultSorter by="create_at">Date of Publication</mfDefaultSorter></th>
+      <th class="text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let book of mf.data; index as idx">
+      <tr *ngIf="!editing[idx]">
+        <td>{{ book.name }}</td>
+        <td>{{ book.authors }}</td>
+        <td>{{ book.numberOfPages }}</td>
+        <td>{{ book.dateOfPublication | date: 'MM/dd/yyyy' }}</td>
+        <td class="action-button text-center">
+          <button class="btn btn-primary btn-xs edit-button" (click)="editBook(idx)"><i class="fa fa-pencil"></i> Edit</button>
+        </td>
+      </tr>
+      <tr *ngIf="editing[idx]">
+        <td><input class="form-control" [(ngModel)]="book.name" /></td>
+        <td><input class="form-control" [(ngModel)]="book.authors" /></td>
+        <td><input class="form-control" [(ngModel)]="book.numberOfPages" /></td>
+        <td>
+            <mat-form-field>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="book.dateOfPublication" placeholder="Choose a date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </td>
+        <td class="action-button text-center">
+          <button class="btn btn-success btn-xs edit-button" (click)="saveBook(idx)"><i class="fa fa-pencil"></i> Save</button>
+          <button class="btn btn-danger btn-xs edit-button" (click)="cancelEditing(idx)"><i class="fa fa-pencil"></i> Cancel</button>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="6">
+        <mfBootstrapPaginator [rowsOnPageSet]="[10,25,50]"></mfBootstrapPaginator>
+      </td>
+    </tr>
+  </tfoot>
+</table>
